@@ -1,0 +1,24 @@
+{
+  "name": "thesis-data",
+  "version": "1.0.0",
+  "description": "",
+  "main": "convert.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomastoye/thesis-data.git"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/thomastoye/thesis-data/issues"
+  },
+  "homepage": "https://github.com/thomastoye/thesis-data#readme",
+  "dependencies": {
+    "csv-parse": "^4.4.1",
+    "csv-stream": "^0.2.0",
+    "stream-transform": "^2.0.0"
+  }
+}

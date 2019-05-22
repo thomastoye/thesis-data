@@ -88,11 +88,14 @@ const databases = {
   },
   opentsdb: {
     toRow: (dp) => {
+      tags = {};
+      filterEmpty(dp.tags).foreach(tag => tags[tag.name] = tag.value);
+
       return JSON.stringify({
         metric: dp.metric,
         timestamp: dp.timestamp*1000,
         value: Number(dp.value),
-        tags: filterEmptyTags(dp.tags),
+        tags,
       }) + '\n';
     }
   },

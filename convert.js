@@ -91,6 +91,10 @@ const databases = {
       tags = {};
       filterEmptyTags(dp.tags).forEach(tag => tags[tag.name] = tag.value);
 
+      if (Object.keys(tags)) {
+        tags['notags'] = 'true';
+      }
+
       return JSON.stringify({
         metric: dp.metric,
         timestamp: dp.timestamp*1000,

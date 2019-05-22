@@ -80,7 +80,7 @@ const dataSets = {
 };
 
 const filterEmptyTags = (tags) => tags.filter(tag => tag.name && tag.value);
-const cleanTagValue = (tag) => tag.value.replace(/ /g, '_').replace(/\"/g, '').replace(/[^a-zA-Z_1-9]/g, '');
+const cleanTagValue = (tag) => (tag.value || 'empty').replace(/ /g, '_').replace(/\"/g, '').replace(/[^a-zA-Z_1-9]/g, '');
 
 const databases = {
   influxdb: {

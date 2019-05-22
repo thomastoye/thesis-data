@@ -89,9 +89,9 @@ const databases = {
   opentsdb: {
     toRow: (dp) => {
       tags = {};
-      filterEmptyTags(dp.tags).forEach(tag => tags[tag.name] = cleanTagValue(tag.value));
+      filterEmptyTags(dp.tags).forEach(tag => tags[tag.name] = cleanTagValue(tag.value) || 'empty');
 
-      if (Object.keys(tags)) {
+      if (Object.keys(tags).length === 0) {
         tags['notags'] = 'true';
       }
 

@@ -80,12 +80,11 @@ const dataSets = {
 };
 
 const filterEmptyTags = (tags) => tags.filter(tag => tag.name && tag.value);
-const cleanTagValue = (tag) => (tag.value || 'empty').replace(/ /g, '_').replace(/\"/g, '').replace(/[^a-zA-Z_1-9]/g, '');
+const cleanTagValue = (value) => value.replace(/ /g, '_').replace(/\"/g, '').replace(/[^a-zA-Z_1-9]/g, '');
 
 const databases = {
   influxdb: {
-    toRow: (dp) => `${dp.metric},${filterEmptyTags(dp.tags).map(tag => tag.name + '=' + cleanTagValue(tag.value)).join(',')} ${dp.metric}=${dp.value} ${Math.round(dp.timestamp) * 1000000000}\n`
-    // when to tags (drop trailing comma): toRow: (dp) => `${dp.metric} ${dp.metric}=${dp.value} ${Math.round(dp.timestamp)}\n`
+    toRow: (dp) => `${[ dp.metric, ...filterEmptyTags(dp.tags).map(tag => tag.name + '=' + cleanTagValue(tag.value)) ].join(',')} ${dp.metric}=${dp.value} ${Math.round(dp.timestamp) * 1000000000}\n`
   },
   opentsdb: {
     toRow: (dp) => {

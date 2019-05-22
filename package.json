@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/thomastoye/thesis-data#readme",
   "dependencies": {
+    "argparse": "^1.0.10",
     "csv-parse": "^4.4.1",
     "csv-stream": "^0.2.0",
     "stream-transform": "^2.0.0"

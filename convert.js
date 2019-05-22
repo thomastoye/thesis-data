@@ -1,13 +1,25 @@
+const ArgumentParser = require('argparse').ArgumentParser;
 const csv = require('csv-stream')
 const transform = require('stream-transform')
 const fs = require('fs');
 
+const parser = new ArgumentParser({
+  version: '0.0.1',
+  addHelp:true,
+  description: 'Data converter'
+});
+
+parser.addArgument(['--dataset'], { choices: [ 'baseline', 'iot', 'movielens', 'stocks' ], required: true});
+parser.addArgument(['--db'], { choices: [ 'influxdb', 'opentsdb' ], required: true });
+
+const args = parser.parseArgs();
+
+const dataSet = args.dataset;
+const db = args.db;
+
+
 // Data point definition:
 // { timestamp: 1111..., metric: '...', tags: [ { name: '...', value: '...' } ], value: 11... }
-
-const dataSet = 'baseline'; // baseline | iot | movielens | stocks
-const db = 'opentsdb'; // influxdb | opentsdb
-
 
 const baselineRowToDataPoint = (row) => {
   return {

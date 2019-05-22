@@ -99,7 +99,7 @@ const databases = {
       return JSON.stringify({
         metric: dp.metric,
         timestamp: dp.timestamp*1000,
-        value: Number(dp.value),
+        value: Number(dp.value) || 0,
         tags,
       }) + '\n';
     }

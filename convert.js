@@ -80,7 +80,7 @@ const dataSets = {
 };
 
 const filterEmptyTags = (tags) => tags.filter(tag => tag.name && tag.value);
-const cleanTagValue = (value) => value.replace(/ /g, '_').replace(/\"/g, '').replace(/[^a-zA-Z_1-9]/g, '');
+const cleanTagValue = (value) => value.replace(/ /g, '_').replace(/\"/g, '').replace(/[^a-zA-Z_1-9]/g, '') || 'emtpy';
 
 const databases = {
   influxdb: {
@@ -89,7 +89,7 @@ const databases = {
   opentsdb: {
     toRow: (dp) => {
       tags = {};
-      filterEmptyTags(dp.tags).forEach(tag => tags[tag.name] = cleanTagValue(tag.value) || 'empty');
+      filterEmptyTags(dp.tags).forEach(tag => tags[tag.name] = cleanTagValue(tag.value));
 
       if (Object.keys(tags).length === 0) {
         tags['notags'] = 'true';

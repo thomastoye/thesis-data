@@ -5,8 +5,8 @@ const fs = require('fs');
 // Data point definition:
 // { timestamp: 1111..., metric: '...', tags: [ { name: '...', value: '...' } ], value: 11... }
 
-const dataSet = 'iot'; // baseline | iot | movielens | stocks
-const db = 'influxdb';
+const dataSet = 'baseline'; // baseline | iot | movielens | stocks
+const db = 'opentsdb'; // influxdb | opentsdb
 
 
 const baselineRowToDataPoint = (row) => {
@@ -73,7 +73,17 @@ const databases = {
   influxdb: {
     toRow: (dp) => `${dp.metric},${filterEmptyTags(dp.tags).map(tag => tag.name + '=' + tag.value.replace(/ /g, '_').replace(/\"/g, '')).join(',')} ${dp.metric}=${dp.value} ${Math.round(dp.timestamp)}\n`
     // when to tags (drop trailing comma): toRow: (dp) => `${dp.metric} ${dp.metric}=${dp.value} ${Math.round(dp.timestamp)}\n`
-  }
+  },
+  opentsdb: {
+    toRow: (dp) => {
+      return JSON.stringify({
+        metric: dp.metric,
+        timestamp: dp.timestamp*1000,
+        value: Number(dp.value),
+        tags: filterEmptyTags(dp.tags),
+      }) + '\n';
+    }
+  },
 };
 
 const line2dp = dataSets[dataSet].toDataPoint;

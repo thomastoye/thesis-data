@@ -42,7 +42,7 @@ const stockRowToDataPoint = (row) => {
 const iotRowToDataPoint = (row) => ({
   timestamp: Math.floor(Number(row.timestamp)),
   metric: row.variable,
-  value: row.value,
+  value: row.value === '?' ? 0 : row.value,
   tags: [ ]
 });
 

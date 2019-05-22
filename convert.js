@@ -89,7 +89,7 @@ const databases = {
   opentsdb: {
     toRow: (dp) => {
       tags = {};
-      filterEmptyTags(dp.tags).foreach(tag => tags[tag.name] = tag.value);
+      filterEmptyTags(dp.tags).forEach(tag => tags[tag.name] = tag.value);
 
       return JSON.stringify({
         metric: dp.metric,

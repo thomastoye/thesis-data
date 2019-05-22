@@ -22,7 +22,7 @@ const stockRowToDataPoint = (row) => {
   return {
     timestamp: row.timestamp,
     metric: row.metric,
-    value: row.value,
+    value: row.value === '?' ? 0 : row.value,
     tags: [ { name: 'stock', value: row.stock} ]
   };
 };
@@ -67,9 +67,12 @@ const dataSets = {
   }
 };
 
+const filterEmptyTags = (tags) => tags.filter(tag => tag.name && tag.value);
+
 const databases = {
   influxdb: {
-    toRow: (dp) => `${dp.metric},${dp.tags.map(tag => tag.name + '=' + tag.value).join(',')} ${dp.metric}=${dp.value} ${Math.round(dp.timestamp)}\n`
+    toRow: (dp) => `${dp.metric},${filterEmptyTags(dp.tags).map(tag => tag.name + '=' + tag.value.replace(/ /g, '_').replace(/\"/g, '')).join(',')} ${dp.metric}=${dp.value} ${Math.round(dp.timestamp)}\n`
+    // when to tags (drop trailing comma): toRow: (dp) => `${dp.metric} ${dp.metric}=${dp.value} ${Math.round(dp.timestamp)}\n`
   }
 };
 

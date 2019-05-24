@@ -33,3 +33,28 @@ Default, except with `max-series-per-database = 1000000000`.
 
 Default, except with `tsd.http.request.enable_chunked = true` and `tsd.http.request.max_chunk = 4096000`.
 
+### Logging Docker metrics
+
+```
+#!/bin/bash
+
+# Usage: ./stats.sh name-of-container
+# Logs metrics for a docker container to file in ./stats directory in CSV format
+# Existing files will be overwritten
+
+DURATION=300 # in seconds
+START=$(date +%s)
+END=$(expr $START + $DURATION)
+
+echo $START
+echo $END
+
+# Add CSV header
+echo "timestamp,container,memusage,memperc,cpuperc,netio,blkio" > ./stats/stats-${1}.csv
+
+while [ $END -gt $(date +%s) ]
+do
+  docker stats --no-stream --format  "$(date +'%s'),{{ .Container }},{{ .MemUsage }},{{ .MemPerc }},{{ .CPUPerc }},{{ .NetIO }},{{ .BlockIO }}" $1 >> ./stats/stats-${1}.csv
+done
+```
+

@@ -69,7 +69,7 @@ iotTimeRanges = {
   ]
 };
 
-stockSymbols: [
+const stockSymbols = [
   [ 'mcd', 'hon', 'nav', 'dis' ],
   [ 'jpm', 'cat', 'mmm', 'ed', 'mrk' ],
   [ 'xom', 'ibm', 'mo' ],

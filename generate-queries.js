@@ -146,7 +146,7 @@ const queries = {
       [ `{ start_absolute: 0, absolute_end: 483840000000, metrics: [ {name: "close", tags: { stock: 'PLACEHOLDER' }, aggregators: [ {name: 'min', sampling: { unit: 'years', value: 10 } } ] }] }`, stockSymbols[1]],
       [ `{ start_absolute: 0, absolute_end: 483840000000, metrics: [ {name: "open", tags: { stock: 'PLACEHOLDER' }, aggregators: [ {name: 'max', sampling: { unit: 'years', value: 10 } } ] }] }`, stockSymbols[2]],
       [ `{ start_absolute: 0, absolute_end: 483840000000, metrics: [ {name: "high", tags: { stock: 'PLACEHOLDER' }, aggregators: [ {name: 'avg', sampling: { unit: 'weeks', value: 1 } } ] }] }`, stockSymbols[3]],
-      [ `{ start_absolute: 0, absolute_end: 483840000000, metrics: [ {name: "volume", tags: { stock: 'PLACEHOLDER' }, aggregators: [ {name: 'sum', sampling: { unit: 'weeks', value: 4 } } ] }] }`, stockSymbols[4]]],
+      [ `{ start_absolute: 0, absolute_end: 483840000000, metrics: [ {name: "volume", tags: { stock: 'PLACEHOLDER' }, aggregators: [ {name: 'sum', sampling: { unit: 'weeks', value: 4 } } ] }] }`, stockSymbols[4]],
     ],
   }
 };

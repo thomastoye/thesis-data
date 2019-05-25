@@ -8,6 +8,7 @@ const parser = new ArgumentParser({
 
 parser.addArgument(['--dataset'], { choices: [ 'baseline', 'iot', 'movielens', 'stocks' ], required: true});
 parser.addArgument(['--db'], { choices: [ 'influxdb', 'opentsdb', 'kairosdb' ], required: true });
+parser.addArgument(['--output'], { choices: [ 'vegeta', 'siege' ], defaultValue: 'vegeta' })
 
 const args = parser.parseArgs();
 
@@ -143,13 +144,14 @@ const queries = {
 };
 
 let encode;
+let urlPrefix = args.output === 'vegeta' ? 'GET ' : '';
 
 if (db === 'influxdb') {
-  encode = (query) => `GET http://${host}:8086/query?db=benchmark_db&q=${encodeURIComponent(query)}`;
+  encode = (query) => `${urlPrefix}http://${host}:8086/query?db=benchmark_db&q=${encodeURIComponent(query)}`;
 } else if (db === 'opentsdb') {
-  encode = (query) => `GET http://${host}:4242/api/query?${query}`;
+  encode = (query) => `${urlPrefix}http://${host}:4242/api/query?${query}`;
 } else if (db === 'kairosdb') {
-  encode = (query) => `GET http://${host}:8080/api/v1/datapoints/query?query=${encodeURIComponent(query)}`;
+  encode = (query) => `${urlPrefix}http://${host}:8080/api/v1/datapoints/query?query=${encodeURIComponent(query)}`;
 }
 
 const createLines = (query) => {

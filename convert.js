@@ -11,7 +11,7 @@ const parser = new ArgumentParser({
 
 parser.addArgument(['--dataset'], { choices: [ 'baseline', 'iot', 'movielens', 'stocks' ], required: true});
 parser.addArgument(['--db'], { choices: [ 'influxdb', 'opentsdb', 'kairosdb' ], required: true });
-parser.addArgument(['--std-out'], { help: 'Write to std out instead of to file', default: false, constant: true, nargs: 0 });
+parser.addArgument(['--std-out'], { help: 'Write to std out instead of to file', defaultValue: false, constant: true, nargs: 0 });
 
 const args = parser.parseArgs();
 

@@ -24,7 +24,7 @@ const stdOut = Array.isArray(args.std_out);
 
 const baselineRowToDataPoint = (row) => {
   return {
-    timestamp: row.timestamp,
+    timestamp: Math.floor(Number(row.timestamp)),
     metric: row.metric,
     value: row.value,
     tags: [ { name: 'tag1', value: row.tag1 }, { name: 'tag2', value: row.tag2 } ]
@@ -33,7 +33,7 @@ const baselineRowToDataPoint = (row) => {
 
 const stockRowToDataPoint = (row) => {
   return {
-    timestamp: row.timestamp,
+    timestamp: Math.floor(Number(row.timestamp)),
     metric: row.metric,
     value: row.value === '?' ? 0 : row.value,
     tags: [ { name: 'stock', value: row.stock} ]

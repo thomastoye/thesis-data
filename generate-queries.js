@@ -39,9 +39,34 @@ const movieNames = [
   'Six_Days_Seven_Nights_1998',
 ];
 
-iotTimeRanges = [
-  [ 1166289840, 1225689780 ],
-];
+iotTimeRanges = {
+  oneWeek: [
+    [ 1166289840, 1166289840 + 604800 ],
+    [ 1166289840 + 14399940, 1166289840 + 14399940 + 604800 ],
+    [ 1166289840 + 30000000, 1166289840 + 30000000 + 604800 ],
+    [ 1166289840 + 40000000, 1166289840 + 40000000 + 604800 ],
+    [ 1166289840 + 11111111, 1166289840 + 11111111 + 604800 ],
+    [ 1166289840 + 22222222, 1166289840 + 22222222 + 604800 ],
+    [ 1166289840 + 50000000, 1166289840 + 50000000 + 604800 ],
+    [ 1166289840 + 44444444, 1166289840 + 44444444 + 604800 ],
+  ],
+  twoWeeks: [
+    [ 1166289840, 1166289840 + 604800 * 2 ],
+    [ 1166289840 + 14399940, 1166289840 + 14399940 + 604800 * 2 ],
+    [ 1166289840 + 30000000, 1166289840 + 30000000 + 604800 * 2 ],
+    [ 1166289840 + 40000000, 1166289840 + 40000000 + 604800 * 2 ],
+    [ 1166289840 + 11111111, 1166289840 + 11111111 + 604800 * 2 ],
+    [ 1166289840 + 22222222, 1166289840 + 22222222 + 604800 * 2 ],
+    [ 1166289840 + 50000000, 1166289840 + 50000000 + 604800 * 2 ],
+    [ 1166289840 + 44444444, 1166289840 + 44444444 + 604800 * 2 ],
+  ],
+  twelveWeeks: [
+    [ 1166289840, 1166289840 + 604800 * 12 ],
+    [ 1166289840 + 14399940, 1166289840 + 14399940 + 604800 * 12 ],
+    [ 1166289840 + 30000000, 1166289840 + 30000000 + 604800 * 12 ],
+    [ 1166289840 + 22222222, 1166289840 + 22222222 + 604800 * 12 ],
+  ]
+};
 
 const queries = {
   baseline: {
@@ -57,12 +82,20 @@ const queries = {
   },
   iot: {
     influxdb: [
-      [ 'select mean(globalactivepower) from globalactivepower where PLACEHOLDER group by time(2w)', iotTimeRanges.map(range => `time > ${range[0]}000000000 and time < ${range[1]}000000000`) ],
-      'select mean(globalactivepower) from globalactivepower where time > 1166289840000000000 and time < 1225689780000000000 group by time(1d)',
+      [ 'select mean(globalactivepower) from globalactivepower where PLACEHOLDER', iotTimeRanges.oneWeek.map(range => `time > ${range[0]}000000000 and time < ${range[1]}000000000`) ],
+      [ 'select mean(globalactivepower) from globalactivepower where PLACEHOLDER group by time(1d)', iotTimeRanges.twoWeeks.map(range => `time > ${range[0]}000000000 and time < ${range[1]}000000000`) ],
+      [ 'select mean(globalactivepower) from globalactivepower where PLACEHOLDER group by time(7d)', iotTimeRanges.twelveWeeks.map(range => `time > ${range[0]}000000000 and time < ${range[1]}000000000`) ],
     ],
     opentsdb: [
-
+      [ `PLACEHOLDER&m=avg:0all-avg:globalactivepower`, iotTimeRanges.oneWeek.map(range => `start=${range[0]}000&end=${range[1]}000`) ],
+      [ `PLACEHOLDER&m=avg:1d-avg:globalactivepower`, iotTimeRanges.twoWeeks.map(range => `start=${range[0]}000&end=${range[1]}000`) ],
+      [ `PLACEHOLDER&m=avg:7d-avg:globalactivepower`, iotTimeRanges.twelveWeeks.map(range => `start=${range[0]}000&end=${range[1]}000`) ],
     ],
+    kairosdb: [
+      [ `{ PLACEHOLDER, metrics: [ { name: "globalactivepower", aggregators: [ { name: 'avg', sampling: { unit: 'weeks', value: 1 } } ] } ] }`,  iotTimeRanges.oneWeek.map(range => `start_absolute: ${range[0]}000, end_absolute: ${range[1]}000`) ],
+      [ `{ PLACEHOLDER, metrics: [ { name: "globalactivepower", aggregators: [ { name: 'avg', sampling: { unit: 'days', value: 1 } } ] } ] }`,  iotTimeRanges.twoWeeks.map(range => `start_absolute: ${range[0]}000, end_absolute: ${range[1]}000`) ],
+      [ `{ PLACEHOLDER, metrics: [ { name: "globalactivepower", aggregators: [ { name: 'avg', sampling: { unit: 'weeks', value: 1 } } ] } ] }`,  iotTimeRanges.twelveWeeks.map(range => `start_absolute: ${range[0]}000, end_absolute: ${range[1]}000`) ],
+    ]
   },
   movielens: {
     influxdb: [

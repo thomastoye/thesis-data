@@ -58,3 +58,17 @@ do
 done
 ```
 
+### Smoke testing
+
+```
+# File created with node generate-queries.js --db=influxdb --dataset=stocks --output=siege > ./siege_urls/stocks-influxdb-siege.txt
+$ http_load -parallel 10 -timeout 30 -seconds 30 ./siege_urls/stocks-influxdb-siege.txt
+6426 fetches, 10 max parallel, 3.77533e+07 bytes, in 30 seconds
+5875.08 mean bytes/connection
+214.2 fetches/sec, 1.25844e+06 bytes/sec
+msecs/connect: 0.244763 mean, 0.608 max, 0.106 min
+msecs/first-response: 0.777712 mean, 19.781 max, 0.297 min
+HTTP response codes:
+  code 200 -- 6426
+```
+

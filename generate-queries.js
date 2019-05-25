@@ -6,9 +6,9 @@ const parser = new ArgumentParser({
   description: 'Query generator'
 });
 
-parser.addArgument(['--dataset'], { choices: [ 'baseline', 'iot', 'movielens', 'stocks' ], required: true});
+parser.addArgument(['--dataset', '--data-set'], { choices: [ 'baseline', 'iot', 'movielens', 'stocks' ], required: true});
 parser.addArgument(['--db'], { choices: [ 'influxdb', 'opentsdb', 'kairosdb' ], required: true });
-parser.addArgument(['--output'], { choices: [ 'vegeta', 'siege' ], defaultValue: 'vegeta' })
+parser.addArgument(['--output', '--format'], { choices: [ 'vegeta', 'siege' ], defaultValue: 'vegeta' })
 
 const args = parser.parseArgs();
 

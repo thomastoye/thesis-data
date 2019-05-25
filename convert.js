@@ -9,7 +9,7 @@ const parser = new ArgumentParser({
   description: 'Data converter'
 });
 
-parser.addArgument(['--dataset'], { choices: [ 'baseline', 'iot', 'movielens', 'stocks' ], required: true});
+parser.addArgument(['--dataset', '--data-set'], { choices: [ 'baseline', 'iot', 'movielens', 'stocks' ], required: true});
 parser.addArgument(['--db'], { choices: [ 'influxdb', 'opentsdb', 'kairosdb' ], required: true });
 parser.addArgument(['--std-out'], { help: 'Write to std out instead of to file', defaultValue: false, constant: true, nargs: 0 });
 

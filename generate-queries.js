@@ -69,6 +69,14 @@ iotTimeRanges = {
   ]
 };
 
+stockSymbols: [
+  [ 'mcd', 'hon', 'nav', 'dis' ],
+  [ 'jpm', 'cat', 'mmm', 'ed', 'mrk' ],
+  [ 'xom', 'ibm', 'mo' ],
+  [ 'cvx', 'hpq', 'jpm', 'aa', 'mrk' ],
+  [ 'dte', 'cat', 'jnj' ], 
+];
+
 const queries = {
   baseline: {
     influxdb: [
@@ -120,25 +128,25 @@ const queries = {
   },
   stocks: {
     influxdb: [
-      [ `select open from open where stock = 'PLACEHOLDER' and time < 483840000000000000`, ['wash', 'ltc', 'jbht', 'fdx'] ],
-      [ `select min(close) from close where stock = 'PLACEHOLDER' and time < 483840000000000000`, ['umh', 'utx', 'ba', 'f', 'csco'] ],
-      [ `select max(open) from open where stock = 'PLACEHOLDER' and time < 483840000000000000`, ['xom', 'cvx', 'mmm'] ],
-      [ `select mean(high) from high where stock = 'PLACEHOLDER' and time < 483840000000000000 group by time(1w)`, ['gt', 'hon', 'duk', 'pdco', 'nvda'] ],
-      [ `select sum(volume) from volume where stock = 'PLACEHOLDER' and time < 483840000000000000 group by time(4w)`, ['mrk', 'pg', 'cost'] ],
+      [ `select open from open where stock = 'PLACEHOLDER' and time < 483840000000000000`, stockSymbols[0] ],
+      [ `select min(close) from close where stock = 'PLACEHOLDER' and time < 483840000000000000`, stockSymbols[1] ],
+      [ `select max(open) from open where stock = 'PLACEHOLDER' and time < 483840000000000000`, stockSymbols[2] ],
+      [ `select mean(high) from high where stock = 'PLACEHOLDER' and time < 483840000000000000 group by time(1w)`, stockSymbols[3] ],
+      [ `select sum(volume) from volume where stock = 'PLACEHOLDER' and time < 483840000000000000 group by time(4w)`, stockSymbols[4] ],
     ],
     opentsdb: [
-      [ `start=0&end=483840000000&m=none:open{stock=PLACEHOLDER}`, ['wash', 'ltc', 'jbht', 'fdx'] ],
-      [ `start=0&end=483840000000&m=min:0all-min:close{stock=PLACEHOLDER}`, ['umh', 'utx', 'ba', 'f', 'csco'] ],
-      [ `start=0&end=483840000000&m=max:0all-max:open{stock=PLACEHOLDER}`, ['xom', 'cvx', 'mmm'] ],
-      [ `start=0&end=483840000000&m=avg:1w-avg:high{stock=PLACEHOLDER}`, ['gt', 'hon', 'duk', 'pdco', 'nvda'] ],
-      [ `start=0&end=483840000000&m=sum:4w-sum:volume{stock=PLACEHOLDER}`, ['mrk', 'pg', 'cost'] ],
+      [ `start=0&end=483840000000&m=none:open{stock=PLACEHOLDER}`, stockSymbols[0] ],
+      [ `start=0&end=483840000000&m=min:0all-min:close{stock=PLACEHOLDER}`, stockSymbols[1] ],
+      [ `start=0&end=483840000000&m=max:0all-max:open{stock=PLACEHOLDER}`, stockSymbols[2] ],
+      [ `start=0&end=483840000000&m=avg:1w-avg:high{stock=PLACEHOLDER}`, stockSymbols[3] ],
+      [ `start=0&end=483840000000&m=sum:4w-sum:volume{stock=PLACEHOLDER}`, stockSymbols[4] ],
     ],
     kairosdb: [
-      [ `{ start_absolute: 0, absolute_end: 483840000000, metrics: [ {name: "open", tags: { stock: 'PLACEHOLDER' } }] }`, ['wash', 'ltc', 'jbht', 'fdx']],
-      [ `{ start_absolute: 0, absolute_end: 483840000000, metrics: [ {name: "close", tags: { stock: 'PLACEHOLDER' }, aggregators: [ {name: 'min', sampling: { unit: 'years', value: 10 } } ] }] }`, ['umh', 'utx', 'ba', 'f', 'csco']],
-      [ `{ start_absolute: 0, absolute_end: 483840000000, metrics: [ {name: "open", tags: { stock: 'PLACEHOLDER' }, aggregators: [ {name: 'max', sampling: { unit: 'years', value: 10 } } ] }] }`, ['xom', 'cvx', 'mmm']],
-      [ `{ start_absolute: 0, absolute_end: 483840000000, metrics: [ {name: "high", tags: { stock: 'PLACEHOLDER' }, aggregators: [ {name: 'avg', sampling: { unit: 'weeks', value: 1 } } ] }] }`, ['gt', 'hon', 'duk', 'pdco', 'nvda']],
-      [ `{ start_absolute: 0, absolute_end: 483840000000, metrics: [ {name: "volume", tags: { stock: 'PLACEHOLDER' }, aggregators: [ {name: 'sum', sampling: { unit: 'weeks', value: 4 } } ] }] }` ,['mrk', 'pg', 'cost']],
+      [ `{ start_absolute: 0, absolute_end: 483840000000, metrics: [ {name: "open", tags: { stock: 'PLACEHOLDER' } }] }`, stockSymbols[0]],
+      [ `{ start_absolute: 0, absolute_end: 483840000000, metrics: [ {name: "close", tags: { stock: 'PLACEHOLDER' }, aggregators: [ {name: 'min', sampling: { unit: 'years', value: 10 } } ] }] }`, stockSymbols[1]],
+      [ `{ start_absolute: 0, absolute_end: 483840000000, metrics: [ {name: "open", tags: { stock: 'PLACEHOLDER' }, aggregators: [ {name: 'max', sampling: { unit: 'years', value: 10 } } ] }] }`, stockSymbols[2]],
+      [ `{ start_absolute: 0, absolute_end: 483840000000, metrics: [ {name: "high", tags: { stock: 'PLACEHOLDER' }, aggregators: [ {name: 'avg', sampling: { unit: 'weeks', value: 1 } } ] }] }`, stockSymbols[3]],
+      [ `{ start_absolute: 0, absolute_end: 483840000000, metrics: [ {name: "volume", tags: { stock: 'PLACEHOLDER' }, aggregators: [ {name: 'sum', sampling: { unit: 'weeks', value: 4 } } ] }] }`, stockSymbols[4]]],
     ],
   }
 };

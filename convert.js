@@ -10,13 +10,14 @@ const parser = new ArgumentParser({
 });
 
 parser.addArgument(['--dataset'], { choices: [ 'baseline', 'iot', 'movielens', 'stocks' ], required: true});
-parser.addArgument(['--db'], { choices: [ 'influxdb', 'opentsdb' ], required: true });
+parser.addArgument(['--db'], { choices: [ 'influxdb', 'opentsdb', 'kairosdb' ], required: true });
+parser.addArgument(['--std-out'], { help: 'Write to std out instead of to file', default: false, constant: true, nargs: 0 });
 
 const args = parser.parseArgs();
 
 const dataSet = args.dataset;
 const db = args.db;
-
+const stdOut = Array.isArray(args.std_out);
 
 // Data point definition:
 // { timestamp: 1111..., metric: '...', tags: [ { name: '...', value: '...' } ], value: 11... }
@@ -103,6 +104,13 @@ const databases = {
       }) + '\n';
     }
   },
+  kairosdb: {
+    toRow: (dp) => {
+      const tags = filterEmptyTags(dp.tags).map(tag => `${tag.name}=${cleanTagValue(tag.value)}`).join(' ') || 'notags=true';
+
+      return `put ${dp.metric} ${dp.timestamp} ${Number(dp.value)} ${tags}\n`;
+    },
+  }
 };
 
 const line2dp = dataSets[dataSet].toDataPoint;
@@ -110,11 +118,11 @@ const dp2row = databases[db].toRow;
 
 const csvStream = csv.createStream();
 const inputFile = fs.createReadStream(dataSets[dataSet].dataSet);
-const outputFile = fs.createWriteStream(`../data_sets/${dataSet}-${db}.txt`);
+const outputStream = stdOut ? process.stdout : fs.createWriteStream(`../data_sets/${dataSet}-${db}.txt`);
 
 const transformer = transform((record, callback) => callback(null, dp2row(line2dp(record))), {
   parallel: 5
 });
 
-inputFile.pipe(csvStream).pipe(transformer).pipe(outputFile);
+inputFile.pipe(csvStream).pipe(transformer).pipe(outputStream);
 

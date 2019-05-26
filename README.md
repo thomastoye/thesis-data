@@ -6,7 +6,7 @@ Data pre-processing tools for my thesis.
 * Pre-process, denormalize and inspect using `parse.ipynb`
 * Convert data sets using `convert.js` (Python loads everything into RAM, which is slow or gets killed by the OOM reaper): `node convert.js --dataset=... --db=...`
 * On the target, create the data containers
-* Start one container and load the data from the client using `cat iot-opentsdb.txt | head -n1000000 | bulk_load_opentsdb -urls http://$HOST:4242`. The `head` can be omitted or increased, in this case it's used to ensure all DBs have the same data set. Make sure containers are ready before executing this command (e.g. OpenTSDB: add `sleep 90` before the command)
+* Start one container and load the data from the client using `cat iot-opentsdb.txt | head -n1000000 | bulk_load_opentsdb -urls http://$HOST:4242`. The `head` can be omitted or increased, in this case it's used to ensure all DBs have the same data set. Make sure containers are ready before executing this command (e.g. OpenTSDB: add `sleep 90` before the command). For KairosDB, use the telnet loader then check size (`time cat data_sets/movielens-kairosdb.txt | head -n1000000 | nc -w 30 10.2.0.42 4242')
 * Complete data loading for all containers
 * Start one container on the DB host
 * Start monitoring container statistics on the DB host
@@ -32,6 +32,98 @@ Default, except with `max-series-per-database = 1000000000`.
 #### `opentsdb.conf`
 
 Default, except with `tsd.http.request.enable_chunked = true` and `tsd.http.request.max_chunk = 4096000`.
+
+#### KairosDB with Cassandra
+
+`docker-compose-kairosdb-cassandra-${DATASET}.yml`
+
+```
+version: "2"
+
+networks:
+  cass_net:
+    driver: bridge
+
+services:
+  kairosdb-cassandra-$DATASET:
+    image: elastisys/kairosdb:1.2.1
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "1"
+    restart: always
+    ports:
+      - "8080:8080"
+      - "4242:4242"
+    networks:
+      - cass_net
+    environment:      
+      - CASSANDRA_HOSTS=cassandra-$DATASET
+      - CASSANDRA_PORT=9042
+
+  cassandra-$DATASET:
+    image: cassandra:3.11
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "1"
+    restart: always
+    ports:
+      - "9042:9042"
+    volumes:
+      - ${PWD}/docker-volumes/cassandra-$DATASET:/var/lib/cassandra
+    networks:
+      - cass_net
+    environment:
+      - CASSANDRA_CLUSTER_NAME=test-cluster
+```
+
+#### KairosDB with ScyllaDB
+
+`docker-compose-kairosdb-scylladb-${DATASET}.yml`
+
+```
+version: "2"
+
+networks:
+  cass_net:
+    driver: bridge
+
+services:
+  kairosdb-scylladb-$DATASET:
+    image: elastisys/kairosdb:1.2.1
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "1"
+    restart: always
+    ports:
+      - "8080:8080"
+      - "4242:4242"
+    networks:
+      - cass_net
+    environment:      
+      - CASSANDRA_HOSTS=scylladb-$DATASET
+      - CASSANDRA_PORT=9042
+
+  scylladb-$DATASET:
+    image: scylladb/scylla
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "1"
+    restart: always
+    ports:
+      - "9042:9042"
+    volumes:
+      - ${PWD}/docker-volumes/scylladb-$DATASET:/var/lib/scylla
+    networks:
+      - cass_net
+```
 
 ### Logging Docker metrics
 

@@ -108,6 +108,12 @@ services:
     environment:      
       - CASSANDRA_HOSTS=scylladb-$DATASET
       - CASSANDRA_PORT=9042
+# Use the following for data sets where you get batch errors / not all points could be loaded
+# kairosdb.properties.template is the default from the container but with kairosdb.queue_processor.batch_size=${KAIROSDB_BATCH_SIZE} and kairosdb.queue_processor.min_batch_size=${KAIROSDB_MIN_BATCH_SIZE}
+#      - KAIROSDB_BATCH_SIZE=100
+#      - KAIROSDB_MIN_BATCH_SIZE=50
+#    volumes:
+#      - ${PWD}/kairosdb.properties.template:/opt/kairosdb/conf/kairosdb.properties.template
 
   scylladb-$DATASET:
     image: scylladb/scylla

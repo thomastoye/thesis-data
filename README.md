@@ -131,6 +131,17 @@ services:
       - cass_net
 ```
 
+#### Using the Influx CLI to connect to a Docker container
+
+Use `./influx-cli.sh <container-name>`. `influx-cli.sh`:
+
+```
+#!/bin/bash
+echo $1
+
+docker run -it --rm --link=${1} -e TERM=screen-256color influxdb:1.5 influx -host ${1}
+```
+
 ### Logging Docker metrics
 
 ```
